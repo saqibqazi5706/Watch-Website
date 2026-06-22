@@ -35,7 +35,7 @@ export default async function HomePage() {
             Discover a curated collection of timepieces. Order in minutes with
             Cash on Delivery or bank transfer.
           </p>
-          <div className="mt-10 flex items-center justify-center gap-4">
+          <div className="mt-10 flex flex-wrap items-center justify-center gap-4">
             <Link
               href="/shop"
               className="rounded-lg bg-amber-400 px-6 py-3 font-semibold text-zinc-950 transition-colors hover:bg-amber-300"

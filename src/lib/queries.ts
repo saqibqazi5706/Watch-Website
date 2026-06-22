@@ -96,6 +96,11 @@ export const CATEGORY_SLUGS_QUERY = defineQuery(`
   *[_type == "category" && defined(slug.current)]{ "slug": slug.current }
 `);
 
+/** Trusted price/stock lookup by product ids — used to verify orders server-side. */
+export const PRODUCTS_FOR_ORDER_QUERY = defineQuery(`
+  *[_type == "product" && _id in $ids]{ _id, name, price, inStock }
+`);
+
 /** Products within a category, by category slug. */
 export const PRODUCTS_BY_CATEGORY_QUERY = defineQuery(`
   *[_type == "product" && category->slug.current == $slug] | order(_createdAt desc){

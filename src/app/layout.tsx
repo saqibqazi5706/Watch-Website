@@ -19,12 +19,28 @@ const geistMono = Geist_Mono({
   subsets: ["latin"],
 });
 
+const siteUrl = process.env.NEXT_PUBLIC_SITE_URL ?? "http://localhost:3000";
+
 export const metadata: Metadata = {
+  metadataBase: new URL(siteUrl),
   title: {
     default: `${SITE.name} — Luxury Watches`,
     template: `%s — ${SITE.name}`,
   },
   description: SITE.tagline,
+  openGraph: {
+    type: "website",
+    siteName: SITE.name,
+    title: `${SITE.name} — Luxury Watches`,
+    description: SITE.tagline,
+    url: siteUrl,
+  },
+  twitter: {
+    card: "summary_large_image",
+    title: `${SITE.name} — Luxury Watches`,
+    description: SITE.tagline,
+  },
+  robots: { index: true, follow: true },
 };
 
 export default async function RootLayout({
