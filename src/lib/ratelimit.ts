@@ -41,6 +41,15 @@ export const contactRatelimit = redis
     })
   : null;
 
+export const uploadRatelimit = redis
+  ? new Ratelimit({
+      redis,
+      limiter: Ratelimit.slidingWindow(10, "1 h"),
+      analytics: true,
+      prefix: "ratelimit:uploads",
+    })
+  : null;
+
 export interface RateLimitResult {
   success: boolean;
   limit: number;

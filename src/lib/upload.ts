@@ -8,7 +8,7 @@
  * Supabase Storage directly.
  */
 const ALLOWED_TYPES = ["image/jpeg", "image/png", "image/webp"];
-const MAX_SIZE_BYTES = 5 * 1024 * 1024; // 5MB
+const MAX_SIZE_BYTES = 10 * 1024 * 1024; // 10MB
 
 export async function uploadReceipt(
   file: File,
@@ -18,7 +18,7 @@ export async function uploadReceipt(
     throw new Error("Only JPEG, PNG and WebP images are allowed");
   }
   if (file.size > MAX_SIZE_BYTES) {
-    throw new Error("File size must be under 5MB");
+    throw new Error("File size must be under 10MB");
   }
 
   const formData = new FormData();

@@ -1,17 +1,34 @@
 import { type NextRequest } from "next/server";
 import { supabaseServer } from "@/lib/supabase-server";
+import { enforceRateLimit, uploadRatelimit } from "@/lib/ratelimit";
 
 // Receipt upload endpoint — BUILT AND READY, but not wired into the form yet.
-// When enabled, create a public Supabase Storage bucket named `receipts`.
+// When enabled:
+//   1. Create a public Supabase Storage bucket named `receipts`.
+//   2. Verify `orderNumber` matches a real recent order before accepting (so
+//      this can't be used as anonymous file storage).
 // The browser never uploads to Supabase directly; it POSTs here and the
 // service-role client performs the upload.
 
 const ALLOWED_TYPES = ["image/jpeg", "image/png", "image/webp"];
-const MAX_SIZE_BYTES = 10 * 1024 * 1024; // 5MB
+const MAX_SIZE_BYTES = 10 * 1024 * 1024; // 10MB
 const BUCKET = "receipts";
 
 export async function POST(request: NextRequest) {
   try {
+    // Rate limit by IP (fail-open until Upstash is configured).
+    const ip =
+      request.headers.get("x-forwarded-for") ??
+      request.headers.get("x-real-ip") ??
+      "anonymous";
+    const rl = await enforceRateLimit(uploadRatelimit, ip);
+    if (!rl.success) {
+      return Response.json(
+        { error: "Too many uploads. Please try again later." },
+        { status: 429 }
+      );
+    }
+
     const form = await request.formData();
     const file = form.get("file");
     const orderNumber = String(form.get("orderNumber") ?? "").trim();
@@ -27,7 +44,7 @@ export async function POST(request: NextRequest) {
     }
     if (file.size > MAX_SIZE_BYTES) {
       return Response.json(
-        { error: "File size must be under 5MB" },
+        { error: "File size must be under 10MB" },
         { status: 413 }
       );
     }
