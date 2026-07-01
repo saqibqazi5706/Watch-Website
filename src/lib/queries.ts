@@ -45,6 +45,10 @@ export const PRODUCT_BY_SLUG_QUERY = defineQuery(`
     inStock,
     description,
     images,
+    bannerImages[]{
+      ...,
+      "dimensions": asset->metadata.dimensions
+    },
     category->{ _id, name, "slug": slug.current, description }
   }
 `);

@@ -2,6 +2,7 @@
 
 import Image from "next/image";
 import Link from "next/link";
+import { useRouter } from "next/navigation";
 import { useCart } from "@/context/CartContext";
 import { imageUrl } from "@/lib/sanity";
 import { formatPrice } from "@/lib/utils";
@@ -9,25 +10,35 @@ import type { Product } from "@/types";
 
 export default function ProductCard({ product }: { product: Product }) {
   const { addToCart } = useCart();
-  const image = imageUrl(product.images?.[0], 600, 600);
+  const router = useRouter();
+  const image = imageUrl(product.images?.[0], 600, 750);
   const href = `/product/${product.slug}`;
 
-  function handleAdd() {
-    addToCart({
+  function buildItem() {
+    return {
       id: product._id,
       name: product.name,
       slug: product.slug,
       price: product.price,
       image,
       brand: product.brand ?? null,
-    });
+    };
+  }
+
+  function handleAdd() {
+    addToCart(buildItem());
+  }
+
+  function handleBuyNow() {
+    addToCart(buildItem());
+    router.push("/checkout");
   }
 
   return (
     <div className="group flex flex-col overflow-hidden rounded-2xl border border-zinc-800 bg-zinc-900 transition-colors hover:border-zinc-700">
       <Link
         href={href}
-        className="relative block aspect-square overflow-hidden bg-zinc-800"
+        className="relative block aspect-[4/5] overflow-hidden bg-zinc-800"
       >
         {image ? (
           <Image
@@ -65,22 +76,23 @@ export default function ProductCard({ product }: { product: Product }) {
           {formatPrice(product.price)}
         </p>
 
-        <div className="mt-4 flex items-center gap-2">
+        <div className="mt-4 flex flex-col gap-2">
+          <button
+            type="button"
+            onClick={handleBuyNow}
+            disabled={!product.inStock}
+            className="w-full rounded-lg bg-amber-400 px-3 py-2 text-sm font-semibold text-zinc-950 transition-colors hover:bg-amber-300 disabled:cursor-not-allowed disabled:bg-zinc-700 disabled:text-zinc-400"
+          >
+            {product.inStock ? "Buy Now" : "Sold out"}
+          </button>
           <button
             type="button"
             onClick={handleAdd}
             disabled={!product.inStock}
-            className="flex-1 rounded-lg bg-amber-400 px-3 py-2 text-sm font-semibold text-zinc-950 transition-colors hover:bg-amber-300 disabled:cursor-not-allowed disabled:bg-zinc-700 disabled:text-zinc-400"
+            className="w-full rounded-lg border border-zinc-700 px-3 py-2 text-sm text-zinc-300 transition-colors hover:border-zinc-500 hover:text-white disabled:cursor-not-allowed disabled:opacity-50"
           >
-            {product.inStock ? "Add to Cart" : "Sold out"}
+            Add to Cart
           </button>
-          <Link
-            href={href}
-            aria-label={`Quick view ${product.name}`}
-            className="rounded-lg border border-zinc-700 px-3 py-2 text-sm text-zinc-300 transition-colors hover:border-zinc-500 hover:text-white"
-          >
-            View
-          </Link>
         </div>
       </div>
     </div>

@@ -7,6 +7,7 @@ import {
   RELATED_PRODUCTS_QUERY,
 } from "@/lib/queries";
 import ProductDetail from "@/components/product/ProductDetail";
+import ProductBanners from "@/components/product/ProductBanners";
 import ProductGrid from "@/components/shop/ProductGrid";
 import type { Product } from "@/types";
 
@@ -61,6 +62,8 @@ export default async function ProductPage({ params }: { params: Params }) {
   return (
     <div className="mx-auto max-w-7xl px-4 py-10 sm:px-6 lg:px-8">
       <ProductDetail product={product} />
+
+      <ProductBanners banners={product.bannerImages ?? []} />
 
       {related.length > 0 && (
         <section className="mt-16 border-t border-zinc-800 pt-10">

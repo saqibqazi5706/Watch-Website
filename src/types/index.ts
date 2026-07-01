@@ -23,6 +23,11 @@ export interface Category {
   coverImage?: SanityImageWithAlt | null;
 }
 
+/** A stacked "description" image shown below the product, with its real size. */
+export interface BannerImage extends SanityImageWithAlt {
+  dimensions?: { width: number; height: number; aspectRatio: number } | null;
+}
+
 export interface Product {
   _id: string;
   name: string;
@@ -34,6 +39,8 @@ export interface Product {
   /** Portable Text — only fetched on the product detail query. */
   description?: PortableTextBlock[] | null;
   images?: SanityImageWithAlt[] | null;
+  /** Long promo/description strips shown stacked below the product. */
+  bannerImages?: BannerImage[] | null;
   category?: Category | null;
 }
 

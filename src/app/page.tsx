@@ -77,7 +77,7 @@ export default async function HomePage() {
               View all →
             </Link>
           </div>
-          <div className="grid grid-cols-2 gap-4 sm:gap-5 lg:grid-cols-3">
+          <div className="grid grid-cols-1 gap-5 sm:grid-cols-2">
             {categories.map((category) => (
               <CategoryCard key={category._id} category={category} />
             ))}

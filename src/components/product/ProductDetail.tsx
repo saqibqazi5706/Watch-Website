@@ -3,6 +3,7 @@
 import { useState } from "react";
 import Image from "next/image";
 import Link from "next/link";
+import { useRouter } from "next/navigation";
 import { PortableText, type PortableTextComponents } from "@portabletext/react";
 import { useCart } from "@/context/CartContext";
 import { imageUrl } from "@/lib/sanity";
@@ -28,6 +29,7 @@ const ptComponents: PortableTextComponents = {
 
 export default function ProductDetail({ product }: { product: Product }) {
   const { addToCart } = useCart();
+  const router = useRouter();
   const [selected, setSelected] = useState(0);
   const [quantity, setQuantity] = useState(1);
   const [added, setAdded] = useState(false);
@@ -35,7 +37,7 @@ export default function ProductDetail({ product }: { product: Product }) {
   const images = product.images ?? [];
   const mainImage = imageUrl(images[selected], 900, 900);
 
-  function handleAdd() {
+  function addSelectedToCart() {
     addToCart(
       {
         id: product._id,
@@ -47,8 +49,17 @@ export default function ProductDetail({ product }: { product: Product }) {
       },
       quantity
     );
+  }
+
+  function handleAdd() {
+    addSelectedToCart();
     setAdded(true);
     setTimeout(() => setAdded(false), 2000);
+  }
+
+  function handleBuyNow() {
+    addSelectedToCart();
+    router.push("/checkout");
   }
 
   return (
@@ -145,25 +156,36 @@ export default function ProductDetail({ product }: { product: Product }) {
           </div>
         )}
 
-        {/* Quantity + Add to cart */}
-        <div className="mt-8 flex flex-wrap items-center gap-4">
-          <div className="flex items-center rounded-lg border border-zinc-700">
+        {/* Quantity + actions */}
+        <div className="mt-8 space-y-3">
+          <div className="flex items-center gap-4">
+            <div className="flex items-center rounded-lg border border-zinc-700">
+              <button
+                type="button"
+                aria-label="Decrease quantity"
+                onClick={() => setQuantity((q) => Math.max(1, q - 1))}
+                className="px-3 py-2 text-zinc-300 transition-colors hover:text-white"
+              >
+                −
+              </button>
+              <span className="w-10 text-center text-white">{quantity}</span>
+              <button
+                type="button"
+                aria-label="Increase quantity"
+                onClick={() => setQuantity((q) => q + 1)}
+                className="px-3 py-2 text-zinc-300 transition-colors hover:text-white"
+              >
+                +
+              </button>
+            </div>
+
             <button
               type="button"
-              aria-label="Decrease quantity"
-              onClick={() => setQuantity((q) => Math.max(1, q - 1))}
-              className="px-3 py-2 text-zinc-300 transition-colors hover:text-white"
+              onClick={handleBuyNow}
+              disabled={!product.inStock}
+              className="flex-1 rounded-lg bg-amber-400 px-6 py-3 font-semibold text-zinc-950 transition-colors hover:bg-amber-300 disabled:cursor-not-allowed disabled:bg-zinc-700 disabled:text-zinc-400"
             >
-              −
-            </button>
-            <span className="w-10 text-center text-white">{quantity}</span>
-            <button
-              type="button"
-              aria-label="Increase quantity"
-              onClick={() => setQuantity((q) => q + 1)}
-              className="px-3 py-2 text-zinc-300 transition-colors hover:text-white"
-            >
-              +
+              {product.inStock ? "Buy Now" : "Sold out"}
             </button>
           </div>
 
@@ -171,9 +193,9 @@ export default function ProductDetail({ product }: { product: Product }) {
             type="button"
             onClick={handleAdd}
             disabled={!product.inStock}
-            className="flex-1 rounded-lg bg-amber-400 px-6 py-3 font-semibold text-zinc-950 transition-colors hover:bg-amber-300 disabled:cursor-not-allowed disabled:bg-zinc-700 disabled:text-zinc-400 sm:flex-none"
+            className="w-full rounded-lg border border-zinc-700 px-6 py-3 font-medium text-zinc-200 transition-colors hover:border-zinc-500 hover:text-white disabled:cursor-not-allowed disabled:opacity-50"
           >
-            {added ? "Added ✓" : product.inStock ? "Add to Cart" : "Sold out"}
+            {added ? "Added to cart ✓" : "Add to Cart"}
           </button>
         </div>
 

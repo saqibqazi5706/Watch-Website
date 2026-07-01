@@ -69,8 +69,30 @@ export const product = defineType({
       ],
     }),
     defineField({
+      name: "bannerImages",
+      title: "Banner / description images",
+      description:
+        "Long promotional images shown stacked full-width below the product details (specs, lifestyle shots, etc.).",
+      type: "array",
+      of: [
+        defineArrayMember({
+          type: "image",
+          options: { hotspot: true },
+          fields: [
+            defineField({
+              name: "alt",
+              title: "Alt text",
+              type: "string",
+            }),
+          ],
+        }),
+      ],
+    }),
+    defineField({
       name: "inStock",
       title: "In stock",
+      description:
+        "Turn OFF to mark this product as Sold Out on the website (Buy Now / Add to Cart become a disabled 'Sold out' button).",
       type: "boolean",
       initialValue: true,
     }),
