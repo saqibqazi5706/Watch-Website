@@ -1,9 +1,10 @@
 "use client";
 
 import Link from "next/link";
+import Image from "next/image";
 import { useState } from "react";
 import { useCart } from "@/context/CartContext";
-import { SITE, NAV_LINKS } from "@/lib/site";
+import { NAV_LINKS } from "@/lib/site";
 import { cn } from "@/lib/utils";
 
 interface NavCategory {
@@ -33,11 +34,15 @@ export default function Navbar({
     <header className="sticky top-0 z-50 border-b border-zinc-800 bg-zinc-950/90 backdrop-blur">
       <nav className="mx-auto flex h-16 max-w-7xl items-center justify-between px-4 sm:px-6 lg:px-8">
         {/* Logo */}
-        <Link
-          href="/"
-          className="text-xl font-bold tracking-tight text-amber-400"
-        >
-          {SITE.name}
+        <Link href="/" className="flex items-center" aria-label="OLEVS home">
+          <Image
+            src="/logo.webp"
+            alt="OLEVS"
+            width={500}
+            height={405}
+            priority
+            className="h-11 w-auto"
+          />
         </Link>
 
         {/* Desktop nav */}

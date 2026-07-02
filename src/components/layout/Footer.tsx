@@ -1,4 +1,5 @@
 import Link from "next/link";
+import Image from "next/image";
 import { SITE } from "@/lib/site";
 
 // Server component: reads owner contact details from env (never hardcoded).
@@ -14,10 +15,14 @@ export default function Footer() {
         <div className="grid gap-8 md:grid-cols-3">
           {/* Brand */}
           <div>
-            <p className="text-lg font-bold tracking-tight text-amber-400">
-              {SITE.name}
-            </p>
-            <p className="mt-2 max-w-xs text-sm text-zinc-500">
+            <Image
+              src="/logo.webp"
+              alt="OLEVS"
+              width={500}
+              height={405}
+              className="h-14 w-auto"
+            />
+            <p className="mt-3 max-w-xs text-sm text-zinc-500">
               {SITE.tagline}
             </p>
           </div>

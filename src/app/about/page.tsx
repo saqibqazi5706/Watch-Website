@@ -54,9 +54,9 @@ export default function AboutPage() {
         </h2>
         <div className="mt-4 space-y-4 text-zinc-300">
           <p>
-            {SITE.name} was founded on a simple idea: a great watch shouldn&apos;t
+            {SITE.name}  was founded on a simple idea: a great watch shouldn&apos;t
             be complicated to buy. We curate a focused collection of timepieces
-            that balance design, durability and value — then make ordering them
+            that balance design, durability and value, then make ordering them
             effortless.
           </p>
           <p>
